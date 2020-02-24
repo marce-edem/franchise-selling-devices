@@ -1,6 +1,6 @@
-########## PrÃ¡ctica 1 #####  AnÃ¡lisis descriptivo de la actividad que siguen las ventas de dispositivos de una franquicia en EspaÃ±a. ##########
+########## Práctica 1 #####  Análisis descriptivo de la actividad que siguen las ventas de dispositivos de una franquicia en España. ##########
 
-######    0_1   ###  Carga de librerÃ­as. #####
+######    0_1   ###  Carga de librerías. #####
 
 library(readxl)
 library(moments)
@@ -19,7 +19,7 @@ library(lmtest)
 
 ######    0_2   ###  Funciones. #####
 
-# EstadÃ­sticos.
+# Estadísticos.
 varianza <- function (x)   sum((x-mean(x))^2)/(length(x)-1)
 
 # Diagrama de cajas.
@@ -35,7 +35,7 @@ boxplot2<-function(x,y)
   abline(h=stats[5],lty=2,col="maroon")
   text(rep(1.35,5),stats,labels=c('Bigote Inferior','Primer cuartil','Mediana','Tercer cuartil','Bigote superior'))
   text(rep(.5,7),stats2,labels=round(stats2,digits=4),cex=0.6)
-  text(rep(0.75,2),stats3,labels=c('MÃNIMO','MÃXIMO'))
+  text(rep(0.75,2),stats3,labels=c('MÍNIMO','MÁXIMO'))
 }
 
 # Tabla de correlaciones.
@@ -54,33 +54,33 @@ dim(tabla_pr) # 4,403 filas (las cuales son nuestras observaciones) y 18 columna
 nrow(tabla_pr)
 ncol(tabla_pr)
 
-# Pero, Â¿que hay dentro o como se llaman estas variables?, esto se descubre utilizando names() o str() o glimpse().
-names(tabla_pr) # nos dice a travÃ©s de un vector de caracteres, los nombres de nuestras variables.
-str(tabla_pr) # Si utilizamos str(), nos encontramos de una manera mÃ¡s concisa toda la informaciÃ³n vista hasta ahora, como
+# Pero, ¿que hay dentro o como se llaman estas variables?, esto se descubre utilizando names() o str() o glimpse().
+names(tabla_pr) # nos dice a través de un vector de caracteres, los nombres de nuestras variables.
+str(tabla_pr) # Si utilizamos str(), nos encontramos de una manera más concisa toda la información vista hasta ahora, como
 glimpse(tabla_pr) # Otra manera igual de eficiente que la anterior pero usando otra libreria. 
 # la clase de la tabla, numero de observaciones y variables, los nombres de las variables, su clase e incluso algunos registros.
 
-# Una vez que conocemos las variables. Les modificamos el nombre para no llevar a equivoco en nuesto anÃ¡lisis ni en futuros modelos.
+# Una vez que conocemos las variables. Les modificamos el nombre para no llevar a equivoco en nuesto análisis ni en futuros modelos.
 cnames <- c("num", "pro", "rentabieco", "rentabifin", "endp", "liq", "produc", "ventas", "emp", "coe", "edad", "conce", "numac", "numpa", "numest", "estp", "grupo", "fju")
 colnames(tabla_pr) <- cnames
 
-# Ahora nos gustaria averiguar como son nuestros datos, y como no serÃ­a muy prÃ¡ctico observarlos todos de golpe, mostramos un resumen.
+# Ahora nos gustaria averiguar como son nuestros datos, y como no seráa muy prÃ¡ctico observarlos todos de golpe, mostramos un resumen.
 head(tabla_pr) # utilizando esta funciÃ³n obtenemos por defecto los 6 primeros datos de cada variable.
 
-# Continuando con nuestro anÃ¡lisis, queremos identificar si en alguna de nuestras variables hay NAs (de "Not Available" o datos no disponibles).
+# Continuando con nuestro análisis, queremos identificar si en alguna de nuestras variables hay NAs (de "Not Available" o datos no disponibles).
 table(is.na(tabla_pr)) # Comprobado, no hay ningÃºn valor inexistente. Todo listo para comenzar.
 
 
 
-########    1   ######  AnÃ¡lisis descriptivo.   ##########
+########    1   ######  Análisis descriptivo.   ##########
 
-######    1_1   ###  DeterminaciÃ³n de los estadÃ­sticos.  #####
+######    1_1   ###  Determinación de los estadísticos.  #####
 
-## Medidas de posiciÃ³n, dispersiÃ³n y forma. ##
-# Estas medidas se utilizan para visualizar y analizar como es nuestra distribuciÃ³n.
+## Medidas de posición, dispersión y forma. ##
+# Estas medidas se utilizan para visualizar y analizar como es nuestra distribución.
 
-sapply(tabla_pr, class) # Esta funciÃ³n nos provee de un resultado diferente para cada variable, dependiendo de su clase.
-summary(tabla_pr) # MÃ­nimo, primer cuartil, mediana, tercer cuartil y mÃ¡ximo de cada una de las variables de nuestro dataset.
+sapply(tabla_pr, class) # Esta función nos provee de un resultado diferente para cada variable, dependiendo de su clase.
+summary(tabla_pr) # Mínimo, primer cuartil, mediana, tercer cuartil y máximo de cada una de las variables de nuestro dataset.
 
 # Ventas
 media_ventas <- mean(tabla_pr$ventas)
@@ -100,11 +100,11 @@ varianza_ventas <- varianza(tabla_pr$ventas)
 desv_tipica_ventas <- sd(tabla_pr$ventas)
 coef_asimetria_ventas <- skewness(tabla_pr$ventas) # El coeficiente de asimetria 2.815738 es positivo, 
 # por lo tanto el conjunto de datos para la variable VENTAS presenta un alargamiento hacia la derecha, 
-# es decir, la distribuciÃ³n de los datos tiene a la derecha una cola mÃ¡s larga.
-coef_curtosis_ventas <- kurtosis(tabla_pr$ventas) # La curtosis 12.11034 es positiva y estÃ¡ muy lejos de 0, 
-# por lo tanto el conjunto de datos para la variable VENTAS tiene una distribuciÃ³n leptocÃºrtica
-coef_variacion_ventas <- desv_tipica_ventas/media_ventas # El coeficiente de variaciÃ³n 1.681256 es positivo
-# La media no es NADA representativa con respecto a los datos, por lo que el conjunto de datos es heterogÃ©neo.
+# es decir, la distribuciÃ³n de los datos tiene a la derecha una cola más larga.
+coef_curtosis_ventas <- kurtosis(tabla_pr$ventas) # La curtosis 12.11034 es positiva y está muy lejos de 0, 
+# por lo tanto el conjunto de datos para la variable VENTAS tiene una distribución leptocúrtica
+coef_variacion_ventas <- desv_tipica_ventas/media_ventas # El coeficiente de variación 1.681256 es positivo
+# La media no es NADA representativa con respecto a los datos, por lo que el conjunto de datos es heterogéneo.
 coef_variacion_ventas
 
 # Empleados
@@ -125,11 +125,11 @@ varianza_emp <- varianza(tabla_pr$emp)
 desv_tipica_emp <- sd(tabla_pr$emp)
 coef_asimetria_emp <- skewness(tabla_pr$emp)# El coeficiente de asimetria 2.603358 es positivo, 
 # por lo tanto el conjunto de datos para la variable empleados presenta un alargamiento hacia la derecha, 
-# es decir, Ã±la distribuciÃ³n de los datos tiene a la derecha una cola mÃ¡s larga.
-coef_curtosis_emp <- kurtosis(tabla_pr$emp)# La curtosis 11.53285 es positiva y estÃ¡ muy lejos de 0, 
-# por lo tanto el conjunto de datos para la variable empleados tiene una distribuciÃ³n leptocÃºrtica.
-coef_variacion_emp <- desv_tipica_emp/media_emp # El coeficiente de variaciÃ³n 1.379502 es positivo
-# La media no es NADA representativa con respecto a los datos, por lo que el conjunto de datos es heterogÃ©neo.
+# es decir, Ã±la distribuciÃ³n de los datos tiene a la derecha una cola más larga.
+coef_curtosis_emp <- kurtosis(tabla_pr$emp)# La curtosis 11.53285 es positiva y está muy lejos de 0, 
+# por lo tanto el conjunto de datos para la variable empleados tiene una distribución leptocúrtica.
+coef_variacion_emp <- desv_tipica_emp/media_emp # El coeficiente de variación 1.379502 es positivo
+# La media no es NADA representativa con respecto a los datos, por lo que el conjunto de datos es heterogéneo.
 
 # Productividad
 media_produc <- mean(tabla_pr$produc)
@@ -149,14 +149,14 @@ varianza_produc <- varianza(tabla_pr$produc)
 desv_tipica_produc <- sd(tabla_pr$produc)
 coef_asimetria_produc <- skewness(tabla_pr$produc)# El coeficiente de asimetria 4.892031 es positivo, 
 # por lo tanto el conjunto de datos para la variable productividad presenta un alargamiento hacia la derecha, 
-# es decir, la distribuciÃ³n de los datos tiene a la derecha una cola mÃ¡s larga.
-coef_curtosis_produc <- kurtosis(tabla_pr$produc)# La curtosis 39.95409 es positiva y estÃ¡ muy lejos de 0, 
-# por lo tanto el conjunto de datos para la variable productividad tiene una distribuciÃ³n leptocÃºrtica.
-coef_variacion_produc <- desv_tipica_produc/media_produc # El coeficiente de variaciÃ³n 1.244842 es positivo
-# La media no es NADA representativa con respecto a los datos, por lo que el conjunto de datos es heterogÃ©neo.
+# es decir, la distribuciÃ³n de los datos tiene a la derecha una cola más larga.
+coef_curtosis_produc <- kurtosis(tabla_pr$produc)# La curtosis 39.95409 es positiva y está muy lejos de 0, 
+# por lo tanto el conjunto de datos para la variable productividad tiene una distribución leptocúrtica.
+coef_variacion_produc <- desv_tipica_produc/media_produc # El coeficiente de variación 1.244842 es positivo
+# La media no es NADA representativa con respecto a los datos, por lo que el conjunto de datos es heterogéneo.
 
 
-## Filtros y Agregaciones. ComparaciÃ³n de Madrid y Barcelona ##
+## Filtros y Agregaciones. Comparación de Madrid y Barcelona ##
 
 tabla_madrid <- tabla_pr[tabla_pr$pro=="Madrid", ]
 tabla_barcelona <- tabla_pr[tabla_pr$pro=="Barcelona", ]
@@ -173,7 +173,7 @@ total_varianza_ventas_madrid <- var(ventas_madrid)
 total_desv_tipica_ventas_madrid <- sd(ventas_madrid)
 total_coef_asimetria_ventas_madrid <- skewness(ventas_madrid) # El coeficiente de asimetria 2.566494 es positivo.
 total_coef_curtosis_ventas_madrid <- kurtosis(ventas_madrid) # La curtosis 9.643746 es positiva.
-total_coef_variacion_ventas_madrid <- total_desv_tipica_ventas_madrid/total_media_ventas_madrid # El coeficiente de variaciÃ³n 1.718476 es positivo.
+total_coef_variacion_ventas_madrid <- total_desv_tipica_ventas_madrid/total_media_ventas_madrid # El coeficiente de variación 1.718476 es positivo.
 # Barcelona
 total_media_ventas_barcelona <- mean(ventas_barcelona)
 total_ri_ventas_barcelona <- IQR(ventas_barcelona)
@@ -182,10 +182,10 @@ total_varianza_ventas_barcelona <- var(ventas_barcelona)
 total_desv_tipica_ventas_barcelona <- sd(ventas_barcelona)
 total_coef_asimetria_ventas_barcelona <- skewness(ventas_barcelona) # El coeficiente de asimetria 2.370075 es positivo.
 total_coef_curtosis_ventas_barcelona <- kurtosis(ventas_barcelona) # La curtosis 8.765498 es positiva.
-total_coef_variacion_ventas_barcelona <- total_desv_tipica_ventas_barcelona/total_media_ventas_barcelona # El coeficiente de variaciÃ³n 1.58457 es positivo.
+total_coef_variacion_ventas_barcelona <- total_desv_tipica_ventas_barcelona/total_media_ventas_barcelona # El coeficiente de variación 1.58457 es positivo.
 
 
-######    1_2   ###  GrÃ¡ficos.   #####
+######    1_2   ###  Gráficos.   #####
 
 # Diagrama de cajas de las variables (Ventas - Empleados - Productividad)
 par(mfrow=c(1,3))
@@ -211,8 +211,8 @@ boxplot2(tabla_barcelona$produc, "Productividad Barcelona")
 
 ######    1_3   ###  Matriz de correlaciones entre todas las variables.   #####
 
-cor(tabla_pr[-2]) # la correlaciÃ³n es algo dificil de ver, redondeamos
-round(cor(tabla_pr[-2]),3) # probamos con varios grÃ¡ficos
+cor(tabla_pr[-2]) # la correlación es algo dificil de ver, redondeamos
+round(cor(tabla_pr[-2]),3) # probamos con varios gráficos
 
 M <- cor(tabla_pr[-2])
 corrplot(M, method = "pie")
@@ -225,8 +225,8 @@ corrgram(tabla_pr, order=TRUE, lower.panel=panel.shade,
 
 ggcorrplot(cor(tabla_pr[ , c("ventas", "emp", "produc", "coe", "numest", "fju", "edad", "rentabieco")], use="complete.obs"), hc.order=TRUE, type="lower", lab=TRUE)
 
-# Las siguientes correlaciones son las 10 mÃ¡s trascendentes, tanto positivas como negativas,
-# y vienen al hilo de lo visto en los grÃ¡ficos y descrito anteriormente.
+# Las siguientes correlaciones son las 10 más trascendentes, tanto positivas como negativas,
+# y vienen al hilo de lo visto en los gráficos y descrito anteriormente.
 # ventas-emp    :       0.88930023 
 # ventas-coe    :       0.52952942
 # emp-numest    :       0.51757886
@@ -238,8 +238,8 @@ ggcorrplot(cor(tabla_pr[ , c("ventas", "emp", "produc", "coe", "numest", "fju", 
 # emp-edad      :       0.43166520
 # ventas-fju    :       0.41529464
 
-# La correlaciÃ³n mÃ¡s alta, y cercana a 1, se da entre ventas y emp(empleados).
-# Y por tanto mÃ¡s adelante, comenzaremos nuestro anÃ¡lisis con modelo de regresiÃ³n lineal entre estas dos variables.
+# La correlación más alta, y cercana a 1, se da entre ventas y emp(empleados).
+# Y por tanto más adelante, comenzaremos nuestro análisis con modelo de regresión lineal entre estas dos variables.
 
 
 
@@ -269,70 +269,70 @@ chisq.test(xtabs(~intervalos_ventas+intervalos_emp,
                  data=tabla_pr))$expected
 
 # Prueba de independencia Chi-Cuadrado de Pearson para determinar si la cantidad de empleados afecta a las ventas.
-# HipÃ³tesis nula: ambas variables son independientes.
+# Hipótesis nula: ambas variables son independientes.
 chisq.test(xtabs(~intervalos_ventas+intervalos_emp,
                  data=tabla_pr), simulate.p.value = TRUE)
-# p-valor=NA: no podemos continuar con el anÃ¡lisis
+# p-valor=NA: no podemos continuar con el análisis
 
 # Prueba exacta de Fisher.
-# HipÃ³tesis nula: las variables son independientes, no existe asociaciÃ³n entre ventas y empleados.
+# Hipótesis nula: las variables son independientes, no existe asociación entre ventas y empleados.
 fisher.test(xtabs(~intervalos_ventas+intervalos_emp,
                   data=tabla_pr), simulate.p.value = TRUE)
-# p-value = 0.0004998 (menor que 0,05) -> rechazamos la hipÃ³tesis nula: existe relaciÃ³n entre las ventas y el nÃºmero de empleados.
+# p-value = 0.0004998 (menor que 0,05) -> rechazamos la hipótesis nula: existe relación entre las ventas y el número de empleados.
 
 
 
 ########    2   ######  Modelos.   ##########
 
-# RegresiÃ³n lineal 1_1
+# Regresión lineal 1_1
 regresion_1_1 <- lm(ventas~emp, data=tabla_pr)
 summary(regresion_1_1)
 # Modelo 1_1 : R->0.7909 | ventas = 441.081 * emp - 557.297
 
 # Aunque el intercepto en el modelo 1_1 resulta significativo al estar su p-valor por debajo de 0.05, 
-# intentamos ajustarlo aun mÃ¡s para ver si mejoramos nuestro resultado.
+# intentamos ajustarlo aun más para ver si mejoramos nuestro resultado.
 modelo_1_1_final <- update(regresion_1_1, .~.-1)
 summary(modelo_1_1_final)
 # Modelo final : R^2 ajustado -> 0.8443 |
 # Con un 84.43% se puede explicar las ventas con la variable de empleados, SIN el termino independiente
 
-# Nube de puntos y recta de mÃ­nimos cuadrados.
+# Nube de puntos y recta de mínimos cuadrados.
 par(mfrow=c(1,1))
 plot(tabla_pr$ventas, tabla_pr$emp, xlab="Ventas", ylab="Empleados")
 abline(regresion_1_1, col="red")
 
 
-# RegresiÃ³n lineal 1_2
+# Regresión lineal 1_2
 regresion_1_2 <- lm(emp~produc, data=tabla_pr)
 summary(regresion_1_2)
 # Modelo 1_2 : R->0.0069 | emp = -0.09256 * produc + 17.838
 
-# RegresiÃ³n lineal 1_3
+# Regresión lineal 1_3
 regresion_1_3 <- lm(ventas~produc, data=tabla_pr)
 summary(regresion_1_3)
 # Modelo 1_3 : R->0.0063 | ventas = 43.828 * produc + 5937.07
 
-# RegresiÃ³n lineal mÃºltiple m_2_1
+# Regresión lineal múltiple m_2_1
 regresion_m_2_1 <- lm(ventas~emp+produc, data=tabla_pr)
 summary((regresion_m_2_1))
-# En modelos multiples se usa el R^2 AJUSTADO para ser mÃ¡s rigurosos
+# En modelos multiples se usa el R^2 AJUSTADO para ser más rigurosos
 # Con un 81.43% se puede explicarse las ventas con las variables de empleados y productividad CONJUNTAMENTE
 
-# RegresiÃ³n lineal mÃºltiple clÃ¡sico - m_2_2
+# Regresión lineal múltiple clásico - m_2_2
 regresion_m_2_2 <- lm(ventas ~ . -num -rentabifin -liq -grupo -edad -numac -estp, data = tabla_pr[-2])
 summary(regresion_m_2_2)
 # Con un 82.47% se puede explicar las ventas con las variables de productividad, empleados, rentabieco, endp, coe, conce, numpa y numest CONJUNTAMENTE
-# Los asteriscos significan que tienen un valor menor a 0,05 y significa que ambas variables son âsagragadasâ!!
+# Los asteriscos significan que tienen un valor menor a 0,05 y significa que ambas variables son "sagragada"!!
 
 
-# EstimaciÃ³n relativa de los predictores.
+# Estimación relativa de los predictores.
 
 # Medida de la bondad del ajuste con RMSPE (Root-Mean-Square Prediction Error).
 relat_imp_RMSPE=hier.part(tabla_pr$ventas, tabla_pr[c(3,5,7,9,10,12,14,15,18)], 
                          family="gaussian", gof="RMSPE", barplot=TRUE)
 relat_imp_RMSPE
 
-# Importancias relativas segÃºn RMSPE.
+# Importancias relativas según RMSPE.
 # rentabieco  0.2985053%
 # endp        0.4446490%
 # produc      2.3332842%
@@ -345,15 +345,15 @@ relat_imp_RMSPE
 
 # El predictor con mayor importancia relativa es empleados, yendo acorde a lo indicado inicialmente sobre 
 # las grandes correlaciones existentes entre ventas y esta variable dependiente, y significativa en el modelo.
-# A continuaciÃ³n se hacen distintos modelos cogiendo todas las variables por encima del 1%.
+# A continuación se hacen distintos modelos cogiendo todas las variables por encima del 1%.
 
-# RegresiÃ³n lineal mÃºltiple - m_2_3
+# Regresión lineal múltiple - m_2_3
 regresion_m_2_3 <- lm(ventas ~ emp + coe + numest + fju + produc + numpa, data=tabla_pr)
 summary(regresion_m_2_3)
 # Modelo m_2_3 : R^2->0.8228
 
 
-# RegresiÃ³n lineal mÃºltiple - m_2_4
+# Regresión lineal múltiple - m_2_4
 regresion_m_2_4 <- lm(ventas ~ emp * coe * numest * fju * produc * numpa -emp:coe:fju:numpa -emp:fju -coe:numest:fju:numpa 
                       -emp:coe:fju:produc:numpa -coe:numest:fju:produc -numest:fju -coe:fju -numest:numpa -emp:coe -numpa
                       -coe:fju:numpa -coe:numpa -numest:produc -coe:numest:numpa -emp:fju:produc:numpa -numest -emp:numest:fju:produc:numpa
@@ -361,7 +361,7 @@ regresion_m_2_4 <- lm(ventas ~ emp * coe * numest * fju * produc * numpa -emp:co
                       -emp:produc:numpa -fju:numpa,
                      data=tabla_pr)
 summary(regresion_m_2_4)
-# Este modelo es a lo "mÃ¡ximo" a lo que se ha llegado quitando variables, a partir de aqui el R^2 ajustado empieza a descender
+# Este modelo es a lo "máximo" a lo que se ha llegado quitando variables, a partir de aqui el R^2 ajustado empieza a descender
 # Modelo m_2_4 : R^2 -> 0.939 |
 # Con un 93.9% se puede explicar las ventas con las variables de empleados, productividad, coe, fju,
 # emp:numest, coe:numest, emp:produc, coe:produc, fju:produc, emp:numpa, produc:numpa, emp:coe:numest, 
@@ -385,12 +385,12 @@ summary(modelo_m_2_4_final)
 
 
 
-# RegresiÃ³n lineal mÃºltiple - m_2_5
+# Regresión lineal mÃºltiple - m_2_5
 regresion_m_2_5 <- lm(ventas ~ emp * coe * numest * fju * produc -numest:produc -emp:coe:numest -emp:coe:numest:fju:produc -emp:coe:fju:produc 
                    -numest:fju -emp:coe:fju -emp:fju:produc,
                    data=tabla_pr)
 summary(regresion_m_2_5)
-# Este modelo es a lo "mÃ¡ximo" a lo que se ha llegado quitando variables, a partir de aqui el R^2 ajustado empieza a descender
+# Este modelo es a lo "máximo" a lo que se ha llegado quitando variables, a partir de aqui el R^2 ajustado empieza a descender
 # Modelo m_2_4 : R^2 -> 0.933 |
 # Con un 93.3% se puede explicar las ventas con las variables de empleados, productividad, coe, numest, fju,
 # emp:produc, emp:coe, emp:numest, coe:numest, emp:fju, coe:fju, coe:produc, fju:produc, emp:numest:fju, 
@@ -398,7 +398,7 @@ summary(regresion_m_2_5)
 # emp:coe:numest:fju, emp:coe:numest:produc, emp:numest:fju:produc, coe:numest:fju:produc CONJUNTAMENTE
 
 # Aunque el intercepto en el modelo m_2_5 resulta significativo al estar su p-valor por debajo de 0.05, 
-# intentamos ajustarlo aun mÃ¡s para mejorar nuestro resultado.
+# intentamos ajustarlo aun más para mejorar nuestro resultado.
 modelo_2_5_final <- update(regresion_m_2_5, .~.-1)
 summary(modelo_2_5_final)
 # Modelo final : R^2 ajustado -> 0.9504 |
@@ -409,33 +409,33 @@ summary(modelo_2_5_final)
 # SIN el termino independiente
 
 
-# A continuaciÃ³n se prueban 2 modelos bajo la recomendaciÃ³n de negocio que podrÃ­an mejorar nuestros resultados:
-# RegresiÃ³n lineal mÃºltiple - m_2_6
+# A continuación se prueban 2 modelos bajo la recomendación de negocio que podrÃ­an mejorar nuestros resultados:
+# Regresión lineal múltiple - m_2_6
 regresion_m_2_6 <- lm(ventas ~ emp * produc, data=tabla_pr)
 summary(regresion_m_2_6)
 # Modelo 2_6 : R^2->0.9267 | ventas = 96.8579 * emp -5.4615 * produc + 24.8763 emp:produc -499.7054
 # Con un 92.67% se puede explicar las ventas con las variables de empleados, productividad y empleados:productividad CONJUNTAMENTE
 
-# Aunque el intercepto en el modelo m_2_6 resulta significativo al estar su p-valor por debajo de 0.05, intentamos ajustarlo aun mÃ¡s para mejorar nuestro resultado.
+# Aunque el intercepto en el modelo m_2_6 resulta significativo al estar su p-valor por debajo de 0.05, intentamos ajustarlo aun más para mejorar nuestro resultado.
 modelo_m_2_6_final <- update(regresion_m_2_6, .~.-1)
 summary(modelo_m_2_6_final)
 # Modelo final : R^2->0.9453 | ventas = 81.7520 * emp -16.2954 * produc + 25.4355 emp:produc
 # Con un 94.53% se puede explicar las ventas con las variables de empleados, productividad y empleados:productividad CONJUNTAMENTE, SIN el termino independiente
 
 
-# RegresiÃ³n lineal mÃºltiple - m_2_7
+# Regresión lineal múltiple - m_2_7
 regresion_m_2_7 <- lm(ventas ~ emp * produc -produc, data=tabla_pr)
 summary(regresion_m_2_7)
 # Con un 92.66% se puede explicar las ventas con las variables de empleados y empleados:productividad CONJUNTAMENTE
 # Quitar solo producitividad no mejora en ningÃºn aspecto el modelo anterior (m_2_6)
 
-## ComparaciÃ³n de los dos modelos.
+## Comparación de los dos modelos.
 
-# ComparaciÃ³n de los modelos con m_2_4(todas las variables relevantes multiplicadas) y m_2_6(ventas*empleados).
+# Comparación de los modelos con m_2_4(todas las variables relevantes multiplicadas) y m_2_6(ventas*empleados).
 anova(regresion_m_2_4, regresion_m_2_6)
 # p-valor=2.2*10^-16 < 0.05 -> aÃ±adir mÃ¡s variables y multiplicarlas si supone efectos relevantes.
 
-# ComparaciÃ³n de los modelos m_2_4 y m_2_4_final(sin intercepto)
+# Comparación de los modelos m_2_4 y m_2_4_final(sin intercepto)
 anova(regresion_m_2_4, modelo_m_2_4_final)
 # p-valor=0.1218 > 0,05 -> eliminar el intercepto no supone efectos relevantes en el modelo.
 
@@ -457,26 +457,26 @@ anova(regresion_m_2_6, modelo_m_2_6_final)
 
 
 
-# Mostramos ademÃ¡s los intervalos de confianza a distintos niveles de significaciÃ³n para los coeficientes estimados:
+# Mostramos además los intervalos de confianza a distintos niveles de significación para los coeficientes estimados:
 # Estos se han realizado con el siguiente mÃ¡s simple con mejor resultado, aun asi en estos momentos y con mis conocimientos
 # no soy capaz de interpretarlo.
 confint(modelo_m_2_4_final)
 
 
-# VisualizaciÃ³n de la distribuciÃ³n de los datos.
+# Visualización de la distribución de los datos.
 par(cex=.6)
 boxplot(ventas~emp*produc, data=tabla_pr, las=2)
 
-# ANOVA clÃ¡sico.
+# ANOVA clásico.
 summary(aov(ventas~emp*produc, data=tabla_pr))
 
 
 ### Criterios para seleccionar el mejor modelo.
 
-# Criterio de InformaciÃ³n de Akaike: mediante la funciÃ³n step seleccionaremos aquÃ©l que 
-# muestre el AIC con valor mÃ­nimo.
+# Criterio de Información de Akaike: mediante la función step seleccionaremos aquél que 
+# muestre el AIC con valor mínimo.
 
-# FunciÃ³n step en su formato hacia adelante.
+# Función step en su formato hacia adelante.
 reg.lm0<-lm(involact~1, chicago_ejercicio)
 slm.forward<-step(reg.lm0, scope=~race+fire+theft+age, direction="forward")
 
@@ -488,51 +488,51 @@ slm_forward5 <- step(regresion_m_2_4, scope=regresion_m_2_6, direction="backward
 slm_forward6 <- step(modelo_2_4_final, scope=modelo_m_2_6_final, direction="both")
 slm_forward7 <- step(modelo_1_1_final, scope=regresion_1_1, direction="both")
 slm_forward8 <- step(modelo_1_1_final, scope=modelo_m_2_6_final, direction="both")
-# En estos casos, al ser los valores de AIC de <none> para todas las comparaciones el mÃ¡s bajo 
+# En estos casos, al ser los valores de AIC de <none> para todas las comparaciones el más bajo 
 # entiendo que es mejor no usar ninguna de esas combinaciones. Por otro lado, 
 # al tener AIC tan altos y dado que hay tan poca diferencia relativa entre ellos, 
 # no podemos usar este criterio.
 
 
-# DiagnÃ³stico del modelo y presencia de outliers.
+# Diagnóstico del modelo y presencia de outliers.
 
 # Comenzamos viendo que dependiendo del tramo en el que nos situemos se satisface o no uno de los supuestos del modelo lineal, pues
 # solo a partir del valor 20,000 existe independencia de los residuos.
 
-# Prueba de Durbin-Watson. H0: no existe autocorrelaciÃ³n.
+# Prueba de Durbin-Watson. H0: no existe autocorrelación.
 dwtest(modelo_m_2_4_final)
-# p-valor=0,01704<0,05: Rechazamos HipÃ³tesis nula. 
-# Existe autocorrelaciÃ³n. Como hemos comentado los residuos son dependientes en los primeros tramos. 
+# p-valor=0,01704<0,05: Rechazamos Hipótesis nula. 
+# Existe autocorrelación. Como hemos comentado los residuos son dependientes en los primeros tramos. 
 # No se satisface el supuesto del modelo lineal.
 
 par(mfrow=c(1,1))
 plot(modelo_m_2_4_final)
 
-# GrÃ¡fico Residuals -vs- Fitted: residuos frente a valores ajustados o predichos. 
+# Gráfico Residuals -vs- Fitted: residuos frente a valores ajustados o predichos. 
 
 # La variabilidad de los residuos parece aumentar con los valores ajustados, aparentemente no existe azar
-# en la dispersiÃ³n del grÃ¡fico, a partir del valor 20,000 aproximadamente como se ha comentado anteriormente.
+# en la dispersión del grÃ¡fico, a partir del valor 20,000 aproximadamente como se ha comentado anteriormente.
 
-# Vemos, ademÃ¡s, que aparecen tres outliers: nÃºmeros de registro 3467(Sevilla), 3971(Valencia) y 2603(Madrid).
+# Vemos, además, que aparecen tres outliers: números de registro 3467(Sevilla), 3971(Valencia) y 2603(Madrid).
 
-# GrÃ¡fico Normal Q-Q: GrÃ¡fico cuantil-cuantil normal de los residuos estandarizados. 
+# Gráfico Normal Q-Q: Gráfico cuantil-cuantil normal de los residuos estandarizados. 
 
-# El modelo de regresiÃ³n lineal asume que los errores tienen comportamiento normal, 
-# y en consecuencia su representaciÃ³n sigue la lÃ­nea recta que se distingue en el grÃ¡fico.
+# El modelo de regresión lineal asume que los errores tienen comportamiento normal, 
+# y en consecuencia su representación sigue la línea recta que se distingue en el gráfico.
 
-# Con el test de normalidad de Shapiro-Wilk vemos que los residuos siguen una distribuciÃ³n normal.
+# Con el test de normalidad de Shapiro-Wilk vemos que los residuos siguen una distribución normal.
 # H0: los residuos muestran comportamiento normal.
 shapiro.test(resid(modelo_m_2_4_final))
-# p-valor=2.2*10^-15<0,05, por lo que rechazamos H0, los residuos NO se comportan como una distribuciÃ³n normal.
+# p-valor=2.2*10^-15<0,05, por lo que rechazamos H0, los residuos NO se comportan como una distribución normal.
 # NO cumple el supuesto del modelo lineal.
 
 
-# GrÃ¡fico Scale-Location.
+# Gráfico Scale-Location.
 
-# Argumento anÃ¡logo al desarrollado en el primero de los grÃ¡ficos, considerando en este caso
-# la raÃ­z cuadrada de los residuos estandarizados.
+# Argumento análogo al desarrollado en el primero de los gráficos, considerando en este caso
+# la raíz cuadrada de los residuos estandarizados.
 
-# GrÃ¡fico Residuals -vs- Leverage: distancias de Cook.
+# Gráfico Residuals -vs- Leverage: distancias de Cook.
 
 # Graficamos los outliers sobre las variables analizadas.
 cooks <- cooks.distance(modelo_m_2_4_final)
@@ -563,7 +563,7 @@ plot(emp+coe+fju+produc+emp*numest+coe*numest+emp*produc+coe*produc+fju*produc+e
     col=ifelse(hat>quantile(hat,.9),'green','black'),pch=20)
 
 
-# Existen outliers y hay varios que se situan mÃ¡s allÃ¡ de la lÃ­nea que marca la distancia de Cook
+# Existen outliers y hay varios que se situan más allá de la línea que marca la distancia de Cook
 # igual a 1, con lo que siendo influyentes SI se puede considerar que su influencia sea alta.
 
 # Con el resultado anterior se antoja recomendable acudir al modelo robusto. 
@@ -571,9 +571,9 @@ plot(emp+coe+fju+produc+emp*numest+coe*numest+emp*produc+coe*produc+fju*produc+e
 
 
 
-########    3   ######  Inferencia estadÃ­stica sobre las ventas entre Madrid y Barcelona   ##########
+########    3   ######  Inferencia estadística sobre las ventas entre Madrid y Barcelona   ##########
 
-### PreparaciÃ³n de datasets para que las muestras aleatorias tengan la misma longitud ###
+### Preparación de datasets para que las muestras aleatorias tengan la misma longitud ###
 
 summary(madrid_barcelona)
 ventas_barcelona <- tabla_barcelona$ventas
@@ -587,7 +587,7 @@ muestra_varianza_ventas_madrid <- var(muestra_madrid)
 muestra_desv_tipica_ventas_madrid <- sd(muestra_madrid)
 muestra_coef_asimetria_ventas_madrid <- skewness(muestra_madrid) # El coeficiente de asimetria 0.057782 es positivo.
 muestra_coef_curtosis_ventas_madrid <- kurtosis(muestra_madrid) # La curtosis 1.814677 es positiva.
-muestra_coef_variacion_ventas_madrid <- muestra_desv_tipica_ventas_madrid/muestra_media_ventas_madrid # El coeficiente de variaciÃ³n 0.577808 es positivo.
+muestra_coef_variacion_ventas_madrid <- muestra_desv_tipica_ventas_madrid/muestra_media_ventas_madrid # El coeficiente de variación 0.577808 es positivo.
 
 muestra_barcelona <- sample.int(ventas_barcelona, size=250, replace=FALSE)
 muestra_media_ventas_barcelona <- mean(muestra_barcelona)
@@ -597,24 +597,24 @@ muestra_varianza_ventas_barcelona <- var(muestra_barcelona)
 muestra_desv_tipica_ventas_barcelona <- sd(muestra_barcelona)
 muestra_coef_asimetria_ventas_barcelona <- skewness(muestra_barcelona) # El coeficiente de asimetria 0.082435 es positivo.
 muestra_coef_curtosis_ventas_barcelona <- kurtosis(muestra_barcelona) # La curtosis 1.872939 es positiva.
-muestra_coef_variacion_ventas_barcelona <- muestra_desv_tipica_ventas_barcelona/muestra_media_ventas_barcelona # El coeficiente de variaciÃ³n 0.561907 es positivo.
+muestra_coef_variacion_ventas_barcelona <- muestra_desv_tipica_ventas_barcelona/muestra_media_ventas_barcelona # El coeficiente de variación 0.561907 es positivo.
 
-## GrÃ¡ficos ##
+## Gráficos ##
 par(mfrow=c(1,2))
 hist(muestra_madrid, main="Muestra Ventas Madrid")
 hist(muestra_barcelona, main="Muestra Ventas Barcelona")
 
 
-######    3_1   ###  Contraste de HipÃ³tesis.  #####
+######    3_1   ###  Contraste de Hipótesis.  #####
 
-## HipÃ³tesis nula: la distribuciÃ³n es normal.
+## Hipótesis nula: la distribución es normal.
 shapiro.test(muestra_madrid)
-# p-valor<0,05. Rechazamos la hipÃ³tesis nula, la distribuciÃ³n NO es normal.
+# p-valor<0,05. Rechazamos la hipótesis nula, la distribución NO es normal.
 
-## HipÃ³tesis nula: la distribuciÃ³n es normal.
+## Hipótesis nula: la distribución es normal.
 shapiro.test(muestra_barcelona)
-# p-valor<0,05. Rechazamos la hipÃ³tesis nula, la distribuciÃ³n NO es normal.
-# Asumimos que si lo es y continuamos con el anÃ¡lisis.
+# p-valor<0,05. Rechazamos la hipótesis nula, la distribución NO es normal.
+# Asumimos que si lo es y continuamos con el análisis.
 
 ## H0: las varianzas son iguales.
 var.test(muestra_madrid, muestra_barcelona)
@@ -631,7 +631,7 @@ t.test(ventas_madrid, ventas_barcelona, var.equal=T)
 # p-valor>0,05. Aceptamos H0, las medias son iguales con el muestreo inicial.
 
 # H0: la media de X es menor o igual que la media de Y.
-# HipÃ³tesis alternativa: mu(x)>mu(y)
+# Hipótesis alternativa: mu(x)>mu(y)
 t.test(muestra_madrid, muestra_barcelona, var.equal=T, alternative = "greater", paired = T)
 # p-valor>0,05. Aceptamos H0, las ventas en Madrid son peores o iguales que las de Barcelona.
 
